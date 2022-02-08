@@ -1,6 +1,6 @@
 # Individual Project called Sarcastic Weather
 
-Dependencies: 
-tkinter
-python-weather 
-asyncio
+## Dependencies: 
+-tkinter
+-python-weather 
+-asyncio
