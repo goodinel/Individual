@@ -1,5 +1,11 @@
 import python_weather
 import asyncio
+import tkinter as tk
+
+# window = tk.Tk()
+# window.title('Sarcastic Weather')
+# window.geometry("700x200")
+
 
 async def getweather(usr_input):
     # declare the client. format defaults to metric system (celcius, km/h, etc.)
@@ -20,7 +26,20 @@ async def getweather(usr_input):
     # close the wrapper once done
     await client.close()
 
-if __name__ == "__main__":
-    usr_input = input("input your city and state of interest: ")
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(getweather(usr_input))
+
+usr_input= input("city of interest? please enter here")
+# getweather(usr_input)
+
+
+# usr_input = input("input your city and state of interest: ")
+# Initialize GUI for user to enter city state or zip
+# usr_input = tk.StringVar()
+# closebutton = tk.Button(window, text='End Now', width=50, command=window.destroy)
+# closebutton.pack(fill='x', expand=True)
+# field_entry = tk.Entry(window,textvariable=usr_input)
+# field_entry.pack(fill='x', expand=True)
+# button = tk.Button(window, text='Submit', width=50, command=getweather)
+# button.pack(fill='x', expand=True)
+loop = asyncio.get_event_loop()
+loop.run_until_complete(getweather(usr_input))
+# window.mainloop()
