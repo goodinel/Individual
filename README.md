@@ -1,1 +1,1 @@
-# Individual Project called Sarcastiv Weather
+# Individual Project called Sarcastic Weather
