@@ -1,18 +1,11 @@
-# Assignment 2
-# Author: Eli Gooding
-# Email: goodinel@oregonstate.edu
-# Date: 1/5/2022
-#import os
-#import random
 import tkinter as tk
 import time
 # from PIL import ImageTk, Image
 
 # define run start function for writing 'run' into prng-service.txt
 def ui_run_start():
-    with open('prng-service.txt', 'w') as file:
-        file.write('run')
-        file.close()
+    # with open('location.txt.txt', 'w') as file:
+    #     file.close()
 
     # Show the randomly generated number
     # Initialize While Bool
