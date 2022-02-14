@@ -15,8 +15,18 @@ async def getweather(usr_input):
     weather = await client.find(usr_input)
     print(f"Your location of interest is: " + weather.location_name)
 
+    with open('weather.txt', 'w') as f:
+        f.write(str(weather.current.temperature))
+
+    with open('aqi.txt', 'w') as a:
+        a.write(str(23))
+
+    with open('aqi.txt', 'r') as b:
+        aqi = b.read()
+
+    print("you air quality index = ",aqi)
     # returns the current day's forecast temperature (int)
-    print(weather.current.temperature)
+    print("your current weather = ", weather.current.temperature)
     # print("this is the type:" , type(weather.current.temperature))
 
     # get the weather forecast for a few days
