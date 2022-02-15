@@ -1,6 +1,7 @@
 import python_weather
 import asyncio
-import tkinter as tk
+from os.path import exists
+import time
 
 
 # window = tk.Tk()
@@ -12,10 +13,22 @@ async def getweather():
     # declare the client. format defaults to metric system (celcius, km/h, etc.)
     client = python_weather.Client(format=python_weather.IMPERIAL)
 
-    # read incoming weather location request
-    with open('location.txt', 'r+') as c:
-        usr_input = c.read()
-        c.close()
+    location_exists = exists('location.txt')
+
+    if location_exists:
+        with open('location.txt', 'r') as c:
+            usr_input = c.read()
+            c.close()
+    else:
+        while not location_exists:
+            location_exists = exists('location.txt')
+            if location_exists:
+                # read incoming weather location request
+                with open('location.txt', 'r') as c:
+                    usr_input = c.read()
+                    c.close()
+            time.sleep(2)
+
 
     print(usr_input)
 
@@ -26,9 +39,6 @@ async def getweather():
     with open('weather.txt', 'w') as f:
         f.write(str(weather.current.temperature))
 
-    with open('aqi.txt', 'w') as a:
-        a.write(str(23))
-
     with open('aqi.txt', 'r') as b:
         aqi = b.read()
 
@@ -36,13 +46,9 @@ async def getweather():
     # returns the current day's forecast temperature (int)
     print("your current weather = ", weather.current.temperature)
     print(statement(weather.current.temperature))
-    # print("this is the type:" , type(weather.current.temperature))
 
-    # get the weather forecast for a few days
-    # for forecast in weather.forecasts:
-    #     print(str(forecast.date), forecast.sky_text, forecast.temperature)
-
-    # close the wrapper once done
+    with open('response.txt' , 'w') as r:
+        r.write(str(weather.current.temperature)+ " degrees... " + statement(weather.current.temperature))
     await client.close()
 
 
