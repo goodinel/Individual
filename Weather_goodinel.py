@@ -14,6 +14,7 @@ async def getweather():
     client = python_weather.Client(format=python_weather.IMPERIAL)
 
     location_exists = exists('location.txt')
+    aqui_exists = exists('current_aqi.txt')
 
     if location_exists:
         with open('location.txt', 'r') as c:
@@ -35,12 +36,17 @@ async def getweather():
     # fetch a weather forecast from a city
     weather = await client.find(usr_input)
     print(f"Your location of interest is: " + weather.location_name)
+    print(f"your sky looks like" + weather.current.sky_text)
 
     with open('weather.txt', 'w') as f:
         f.write(str(weather.current.temperature))
 
-    with open('aqi.txt', 'r') as b:
-        aqi = b.read()
+    if aqui_exists:
+        with open('current_aqi.txt', 'r') as b:
+            aqi = b.read()
+            b.close()
+        aqiStatement(int(aqi))
+
 
     print("you air quality index = ", aqi)
     # returns the current day's forecast temperature (int)
@@ -56,7 +62,7 @@ def statement(temp):
     above80 = "Better know how to make a swamp air conditioner"
     between79and70 = "Grab a beer 'cause its a little hot"
     between50and69 = "Perfection... sunglasses and chill"
-    between49and32 = "Chilly but all is good"
+    between49and32 = "Chilly but all is good. Nothing a beer cant handle."
     between31and20 = "COLD"
     between19and10 = "Really COLD"
     between9and0 = "Yeah Really Really COLD"
@@ -78,6 +84,39 @@ def statement(temp):
         return between9and0
     else:
         return belowzero
+
+def aqiStatement(aqi):
+
+    aboveFive = "Hazardous"
+    five ="Very Unhealthy"
+    four = "Unhealthy"
+    three = "Unhealthy for Sensitive Groups"
+    two = "Moderate"
+    one = "Good"
+    category = ""
+
+    if aqi > 5:
+        category = aboveFive
+    elif aqi == 5:
+        category = five
+    elif aqi == 4:
+        category = four
+    elif aqi == 3 :
+        category = three
+    elif aqi ==2:
+        category = two
+    elif aqi == 1:
+        category = one
+
+
+    with open('aqi_response.txt', 'w') as f:
+        f.write(category)
+        f.close()
+
+    return
+
+
+
 
 
 # usr_input= input("city of interest? please enter here")
