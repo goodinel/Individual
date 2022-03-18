@@ -62,12 +62,13 @@ def ui_inputs():
 
 
 # set up widgets and displays of UI.
-input_label = tk.Label(window, text="Enter location.. zip code preferred test others for yourself")
+input_label = tk.Label(window, text="Enter location.. zip code preferred test others for yourself click submit when youre ready")
 response_label = tk.Label()
 response_label.grid(row=0, column=3)
 aqi_label = tk.Label()
 aqi_label.grid(row=1, column=2)
 usr_entry = tk.Entry(window, textvariable=usr_input)
+input_label2 = tk.Label(window, text="When you're done click end or exit on top right.")
 
 submit_button = tk.Button(window, text="Submit", command=ui_inputs)
 
@@ -77,6 +78,7 @@ usr_entry.grid(row=0, column=1)
 submit_button.grid(row=0, column=2)
 
 # Terminate button
+input_label2.grid(row=3, column=0)
 button2 = tk.Button(window, text='End Now', command=window.destroy)
 button2.grid(row=3, column=1)
 window.mainloop()

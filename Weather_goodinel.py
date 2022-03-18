@@ -66,7 +66,7 @@ async def getweather():
     await client.close()
 
 
-# Statement
+# Sarcastic statement generator that takes the temperature and aligns it with a sarcastic statement.
 def statement(temp):
     above80 = "Better know how to make a swamp air conditioner"
     between79and70 = "Grab a beer 'cause its a little hot"
