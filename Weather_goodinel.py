@@ -1,63 +1,72 @@
+#
+# Author: Eli Gooding
+# Description: this file looks for a txt file called "location.txt" containing a zip code to then use web api
+# python_weather to get the temperature, send it to statement function to return a sarcastic statement on the weather
+# in a file called "response.txt"
+
+
 import python_weather
 import asyncio
 from os.path import exists
 import time
 
 
-# window = tk.Tk()
-# window.title('Sarcastic Weather')
-# window.geometry("700x200")
-
-
 async def getweather():
     # declare the client. format defaults to metric system (celcius, km/h, etc.)
     client = python_weather.Client(format=python_weather.IMPERIAL)
 
-    location_exists = exists('location.txt')
-    aqui_exists = exists('current_aqi.txt')
+    # look for incoming files to exist which tells the microservice to run and look for location or air quality
+    location_exists = False
+    print(location_exists)
+    aqi_exists = False
 
-    if location_exists:
-        with open('location.txt', 'r') as c:
-            usr_input = c.read()
-            c.close()
-    else:
-        while not location_exists:
-            location_exists = exists('location.txt')
-            if location_exists:
-                # read incoming weather location request
-                with open('location.txt', 'r') as c:
-                    usr_input = c.read()
-                    c.close()
-            time.sleep(2)
-
+    # wait until location has been communicated from user input.
+    while not location_exists:
+        location_exists = exists('location.txt')
+        print(location_exists)
+        if location_exists:
+            # read incoming weather location request
+            with open('location.txt', 'r') as file:
+                usr_input = str(file.read())
+                file.close()
+        time.sleep(2)
 
     print(usr_input)
 
-    # fetch a weather forecast from a city
-    weather = await client.find(usr_input)
+    # fetch a weather forecast from the city user defines
+    weather = await client.find(str(usr_input))
+
+    # print in console so that someone debugging can review
     print(f"Your location of interest is: " + weather.location_name)
     print(f"your sky looks like" + weather.current.sky_text)
 
     with open('weather.txt', 'w') as f:
         f.write(str(weather.current.temperature))
 
-    if aqui_exists:
-        with open('current_aqi.txt', 'r') as b:
-            aqi = b.read()
-            b.close()
-        aqiStatement(int(aqi))
-
+    # If teammates microservice isn't present, then wait until present. Then read aqi number.
+    while not aqi_exists:
+        aqi_exists = exists('current_aqi.txt')
+        if aqi_exists:
+            with open('current_aqi.txt', 'r') as b:
+                aqi = b.read()
+                b.close()
+            aqiStatement(int(aqi))
+            with open('aqi_response.txt', 'w') as f:
+                f.write(aqiStatement(int(aqi)))
+                f.close()
+        time.sleep(2)
 
     print("you air quality index = ", aqi)
     # returns the current day's forecast temperature (int)
     print("your current weather = ", weather.current.temperature)
     print(statement(weather.current.temperature))
 
-    with open('response.txt' , 'w') as r:
-        r.write(str(weather.current.temperature)+ " degrees... " + statement(weather.current.temperature))
+    with open('response.txt', 'w') as r:
+        r.write(str(weather.current.temperature) + " degrees... " + statement(weather.current.temperature))
     await client.close()
 
 
+# Statement
 def statement(temp):
     above80 = "Better know how to make a swamp air conditioner"
     between79and70 = "Grab a beer 'cause its a little hot"
@@ -85,10 +94,10 @@ def statement(temp):
     else:
         return belowzero
 
-def aqiStatement(aqi):
 
+def aqiStatement(aqi):
     aboveFive = "Hazardous"
-    five ="Very Unhealthy"
+    five = "Very Unhealthy"
     four = "Unhealthy"
     three = "Unhealthy for Sensitive Groups"
     two = "Moderate"
@@ -96,27 +105,17 @@ def aqiStatement(aqi):
     category = ""
 
     if aqi > 5:
-        category = aboveFive
+        return aboveFive
     elif aqi == 5:
-        category = five
+        return five
     elif aqi == 4:
-        category = four
-    elif aqi == 3 :
-        category = three
-    elif aqi ==2:
-        category = two
+        return four
+    elif aqi == 3:
+        return three
+    elif aqi == 2:
+        return two
     elif aqi == 1:
-        category = one
-
-
-    with open('aqi_response.txt', 'w') as f:
-        f.write(category)
-        f.close()
-
-    return
-
-
-
+        return one
 
 
 # usr_input= input("city of interest? please enter here")
